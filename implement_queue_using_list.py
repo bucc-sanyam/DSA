@@ -4,31 +4,38 @@ class ImplQueue:
         self.size = size
         self.head = 0
         self.tail = 0
+        self.count = 0
 
     def __str__(self):
         if self.is_empty():
             return "Queue is empty"
-        elements = self.queue[self.head:self.tail]
-        return "Queue (top to bottom): " + " -> ".join(str(e) for e in elements)
+        elements = []
+        index = self.head
+        for _ in range(self.count):
+            elements.append(str(self.queue[index]))
+            index = (index + 1) % self.size
+        return "Queue (front to back): " + " -> ".join(elements)
 
     def is_empty(self):
-        return self.head == self.tail
+        return self.count == 0
 
     def is_full(self):
-        return self.tail >= self.size
+        return self.count >= self.size
 
     def push(self, ele):
         if self.is_full():
             raise Exception("Queue is full")
         self.queue[self.tail] = ele
-        self.tail += 1
+        self.tail = (self.tail + 1) % self.size
+        self.count += 1
 
     def pop(self):
         if self.is_empty():
             raise Exception("Queue is empty")
         ele = self.queue[self.head]
         self.queue[self.head] = None
-        self.head += 1
+        self.head = (self.head + 1) % self.size
+        self.count -= 1
         return ele
 
     def peek(self):
@@ -75,7 +82,7 @@ def main():
 
             elif choice == "4":
                 try:
-                    print("Queue:", print(queue))
+                    print(queue)
                 except Exception as e:
                     print("Error:", e)
 
